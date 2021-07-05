@@ -54,25 +54,67 @@ static int getCmd(char *string, InMemStructs *structs) {
         sdsfreesplitres(tokens, count);
         return -1;
     }
-    printf("%s\n", tokens[1]);
     sds value = findByKeyInTable(structs->hashTable, structs->hashTableSize, tokens[1]);
     if (value) printf("value is :%s\n", value);
+    return 0;
+}
+static int delCmd(char *string, InMemStructs *structs) {
+    int count;
+    sds *tokens = tokenizeString(string, &count);
+    if (count != 2) {
+        fprintf(stderr, "count error:%d\n", count);
+        sdsfreesplitres(tokens, count);
+        return -1;
+    }
+    if (deleteByKeyInTable(structs->hashTable, structs->hashTableSize, tokens[1])) {
+        printf("delete \"%s\" success\n", tokens[1]);
+    } else {
+        printf("key not found\n");
+    }
+    return 0;
+}
+static int existsCmd(char *string, InMemStructs *structs) {
+    int count;
+    sds *tokens = tokenizeString(string, &count);
+    if (count != 2) {
+        fprintf(stderr, "count error:%d\n", count);
+        sdsfreesplitres(tokens, count);
+        return -1;
+    }
+    if (checkExsistsByKeyInTable(structs->hashTable, structs->hashTableSize, tokens[1])) {
+        printf("true\n");
+    } else
+        printf("false\n");
+    return 0;
+}
+static int renameCmd(char *string, InMemStructs *structs) {
+    int count;
+    sds *tokens = tokenizeString(string, &count);
+    if (count != 3) {
+        fprintf(stderr, "count error:%d\n", count);
+        sdsfreesplitres(tokens, count);
+        return -1;
+    }
+    if (renameKeyInTable(structs->hashTable, structs->hashTableSize, tokens[1], tokens[2])) {
+        printf("key: \"%s\" renamed\n", tokens[1]);
+    } else
+        perror("error");
     return 0;
 }
 void parseInput(char *string, InMemStructs *structs) {
     // sds sdsString = sdsnew(string);
     switch (getCommand(string)) {
         case DEL_CMD:
-            // DO
+            delCmd(string, structs);
             break;
         case DUMP_CMD:
             // DO
             break;
         case EXISTS_CMD:
-            // DO
+            existsCmd(string, structs);
             break;
         case RENAME_CMD:
-            // DO
+            renameCmd(string, structs);
             break;
         case SET_CMD:
             setCmd(string, structs);

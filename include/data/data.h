@@ -23,4 +23,7 @@ void insertDataToTable(hashStruct *hashTable, const size_t hashTableSize, const 
 sds findByKeyInTable(hashStruct *hashTable, const size_t hashTableSize, const sds key);
 bool deleteByKeyInTable(hashStruct *hashTable, const size_t hashTableSize, const sds key);
 void deleteHashTable(hashStruct *hashTable, const size_t hashTableSize);
+bool checkExsistsByKeyInTable(hashStruct *hashTable, const size_t hashTableSize, const sds key);
+bool renameKeyInTable(hashStruct *hashTable, const size_t hashTableSize, const sds oldkey, const sds newkey);
+
 #endif
