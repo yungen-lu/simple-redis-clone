@@ -7,9 +7,11 @@
 
 #include "../murmurhash/murmurhash.h"
 #define SEED 65
+enum types { null, sdsString, doublell };
 typedef struct {
     sds key;
-    sds value;
+    void *pointer;
+    enum types type;
     bool exist;
 } hashStruct;
 typedef struct {
