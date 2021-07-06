@@ -37,7 +37,7 @@ static int setCmd(const char *string, InMemStructs *structs) {
         sdsfreesplitres(tokens, count);
         return -1;
     }
-    insertDataToTable(structs->hashTable, structs->hashTableSize, tokens[1], tokens[2]);
+    insertStringDataToTable(structs->hashTable, structs->hashTableSize, tokens[1], tokens[2]);
     sdsfreesplitres(tokens, count);
     return 0;
 }
@@ -61,7 +61,7 @@ static int delCmd(const char *string, InMemStructs *structs) {
         sdsfreesplitres(tokens, count);
         return -1;
     }
-    if (deleteByKeyInTable(structs->hashTable, structs->hashTableSize, tokens[1])) {
+    if (deleteStringByKeyInTable(structs->hashTable, structs->hashTableSize, tokens[1])) {
         printf("delete \"%s\" success\n", tokens[1]);
     } else {
         printf("key not found\n");
@@ -90,7 +90,7 @@ static int renameCmd(const char *string, InMemStructs *structs) {
         sdsfreesplitres(tokens, count);
         return -1;
     }
-    if (renameKeyInTable(structs->hashTable, structs->hashTableSize, tokens[1], tokens[2])) {
+    if (renameStringKeyInTable(structs->hashTable, structs->hashTableSize, tokens[1], tokens[2])) {
         printf("key: \"%s\" renamed\n", tokens[1]);
     } else
         fprintf(stderr, "can't rename key");

@@ -20,5 +20,10 @@ typedef struct {
 hashStruct *createHashTable(size_t hashTableSize);
 InMemStructs *createInMemStructs(const size_t hashTableSize);
 void deleteHashTable(hashStruct *hashTable, const size_t hashTableSize);
+bool checkExsistsByKeyInTable(hashStruct *hashTable, const size_t hashTableSize, const sds key);
 
+void * findByKeyInTable(hashStruct *hashTable, const size_t hashTableSize, const sds key);
+const long probeFunc(const long i);
+size_t getTablePos(const size_t hashTableSize, const sds string);
+hashStruct *findHashTable(hashStruct *hashTable, const size_t hashTableSize, const sds key);
 #endif

@@ -8,6 +8,7 @@ add_library(murmurhash-lib STATIC ${PROJECT_SOURCE_DIR}/src/murmurhash/murmurhas
 add_library(sds-lib STATIC ${PROJECT_SOURCE_DIR}/src/sds/sds.c)
 add_library(parseInput-lib STATIC ${PROJECT_SOURCE_DIR}/src/parseInput/parseInput.c)
 add_library(sharedData-lib STATIC ${PROJECT_SOURCE_DIR}/src/sharedData/sharedData.c)
+add_library(doublell-lib STATIC ${PROJECT_SOURCE_DIR}/src/doublell/doublell.c)
 
 target_include_directories(server-lib PUBLIC ${PROJECT_SOURCE_DIR}/include/server)
 target_include_directories(keyValue-lib PUBLIC ${PROJECT_SOURCE_DIR}/include/keyValue)
@@ -15,12 +16,21 @@ target_include_directories(murmurhash-lib PUBLIC ${PROJECT_SOURCE_DIR}/include/m
 target_include_directories(sds-lib PUBLIC ${PROJECT_SOURCE_DIR}/include/sds)
 target_include_directories(parseInput-lib PUBLIC ${PROJECT_SOURCE_DIR}/include/parseInput)
 target_include_directories(sharedData-lib PUBLIC ${PROJECT_SOURCE_DIR}/include/sharedData)
+target_include_directories(doublell-lib PUBLIC ${PROJECT_SOURCE_DIR}/include/doublell)
 
 add_executable(simple-key-value-database-binary main.c)
 # target_link_libraries(server-lib PRIVATE murmurhash-lib)
 # target_link_libraries(simple-key-value-database-binary PRIVATE server-lib PRIVATE data-lib PRIVATE murmurhash-lib PRIVATE sds-lib PRIVATE parseInput-lib)
-target_link_libraries(sharedData-lib PRIVATE sds-lib)
-target_link_libraries(keyValue-lib PRIVATE sharedData-lib PRIVATE murmurhash-lib)
+target_link_libraries(sharedData-lib PRIVATE sds-lib  PRIVATE murmurhash-lib)
+target_link_libraries(keyValue-lib PRIVATE sharedData-lib)
 target_link_libraries(server-lib PRIVATE parseInput-lib PRIVATE sharedData-lib)
 target_link_libraries(parseInput-lib PRIVATE keyValue-lib)
+target_link_libraries(doublell-lib PRIVATE sharedData-lib)
 target_link_libraries(simple-key-value-database-binary PRIVATE server-lib)
+
+# LIST(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake_modules")
+# include(CodeCoverage)
+# APPEND_COVERAGE_COMPILER_FLAGS()
+# set(COVERAGE_LCOV_EXCLUDES 'src/sds/*' 'src/murmurhash/*' 'include/sds/*' 'include/murmurhash/*')
+# SETUP_TARGET_FOR_COVERAGE_LCOV(NAME code_coverage
+#                                EXECUTABLE simple-key-value-database-binary)
