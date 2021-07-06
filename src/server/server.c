@@ -34,11 +34,11 @@ int *startServer(struct sockaddr_in *options) {
         return server_fd;
     }
 }
-void closeServer(int *server_fd, struct sockaddr_in *options) {
+void closeServer(const int *server_fd, struct sockaddr_in *options) {
     close(*server_fd);
     free(options);
 }
-void listinLoop(int *server_fd, struct sockaddr_in *options) {
+void listinLoop(const int *server_fd, struct sockaddr_in *options) {
     int new_socket;
     int addrlen = sizeof(*options);
     InMemStructs *structs = createInMemStructs(HASH_TABLE_SIZE);

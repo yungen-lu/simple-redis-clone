@@ -9,11 +9,10 @@ static void showCmdNotFoundError(char *string) {
     // TODO
     // PRINT USAGE
 }
-static int getCommand(char *string) {
+static int getCommand(const char *string) {
     char *arrOfCmd[] = {"DEL", "DUMP", "EXISTS", "RENAME", "SET", "GET"};
-    char *ptr = string;
     char buffer[128];
-    sscanf(ptr, "%127s", buffer);
+    sscanf(string, "%127s", buffer);
     for (int i = 0; i < TOTAL_CMD; i++) {
         if (strncmp(buffer, arrOfCmd[i], 127) == 0) {
             return i + 10;
@@ -22,7 +21,7 @@ static int getCommand(char *string) {
     showCmdNotFoundError(buffer);
     return CMD_NOT_FOUND;
 }
-static sds *tokenizeString(char *string, int *count) {
+static sds *tokenizeString(const char *string, int *count) {
     sds *tokens;
     const char *del = " \n\t";
     sds tmp = sdsnew(string);

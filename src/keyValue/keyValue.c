@@ -25,7 +25,7 @@ InMemStructs *createInMemStructs(const size_t hashTableSize) {
     new->hashTableSize = hashTableSize;
     return new;
 }
-static const int probeFunc(const size_t i) { return i * i * (i % 2) * -1; }
+static const long probeFunc(const long i) { return i * i * (i % 2) * -1; }
 static size_t getTablePos(const size_t hashTableSize, const sds string) {
     return murmurhash(string, (uint32_t)sdslen(string), SEED) % hashTableSize;
 }
@@ -76,7 +76,7 @@ bool deleteByKeyInTable(hashStruct *hashTable, const size_t hashTableSize, const
         return false;
 }
 bool checkExsistsByKeyInTable(hashStruct *hashTable, const size_t hashTableSize, const sds key) {
-    hashStruct *table = findHashTable(hashTable, hashTableSize, key);
+    const hashStruct *table = findHashTable(hashTable, hashTableSize, key);
     if (table) {
         return true;
     } else

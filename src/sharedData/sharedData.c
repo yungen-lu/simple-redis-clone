@@ -1,5 +1,7 @@
 #include "sharedData.h"
+
 #include "sds.h"
+
 hashStruct *createHashTable(const size_t hashTableSize) {
     hashStruct *new = (hashStruct *)malloc(sizeof(hashStruct) * hashTableSize);
     for (size_t i = 0; i < hashTableSize; i++) {
