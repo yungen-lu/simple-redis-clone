@@ -54,7 +54,9 @@ void listinLoop(const int *server_fd, struct sockaddr_in *options) {
                 buffer = realloc(buffer, bufferSize);
             }
         }
-        buffer[offset - 1] = '\0';
+        if (offset != 0) {
+            buffer[offset - 1] = '\0';
+        }
         // SEND
         parseInput(buffer, structs);
         shutdown(new_socket, SHUT_RDWR);
