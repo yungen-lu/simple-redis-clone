@@ -29,7 +29,7 @@ static sds *tokenizeString(const char *string, int *count) {
     sdsfree(tmp);
     return tokens;
 }
-static int setCmd(char *string, InMemStructs *structs) {
+static int setCmd(const char *string, InMemStructs *structs) {
     int count;
     sds *tokens = tokenizeString(string, &count);
     if (count != 3) {
@@ -41,7 +41,7 @@ static int setCmd(char *string, InMemStructs *structs) {
     sdsfreesplitres(tokens, count);
     return 0;
 }
-static int getCmd(char *string, InMemStructs *structs) {
+static int getCmd(const char *string, InMemStructs *structs) {
     int count;
     sds *tokens = tokenizeString(string, &count);
     if (count != 2) {
@@ -53,7 +53,7 @@ static int getCmd(char *string, InMemStructs *structs) {
     if (value) printf("value is :%s\n", value);
     return 0;
 }
-static int delCmd(char *string, InMemStructs *structs) {
+static int delCmd(const char *string, InMemStructs *structs) {
     int count;
     sds *tokens = tokenizeString(string, &count);
     if (count != 2) {
@@ -68,7 +68,7 @@ static int delCmd(char *string, InMemStructs *structs) {
     }
     return 0;
 }
-static int existsCmd(char *string, InMemStructs *structs) {
+static int existsCmd(const char *string, InMemStructs *structs) {
     int count;
     sds *tokens = tokenizeString(string, &count);
     if (count != 2) {
@@ -82,7 +82,7 @@ static int existsCmd(char *string, InMemStructs *structs) {
         printf("false\n");
     return 0;
 }
-static int renameCmd(char *string, InMemStructs *structs) {
+static int renameCmd(const char *string, InMemStructs *structs) {
     int count;
     sds *tokens = tokenizeString(string, &count);
     if (count != 3) {

@@ -22,7 +22,7 @@ int *startServer(struct sockaddr_in *options) {
         fprintf(stderr, "socket init failed");
         exit(EXIT_FAILURE);
     }
-    if (bind(*server_fd, (struct sockaddr *)&*options, sizeof(*options)) < 0) {
+    if (bind(*server_fd, (struct sockaddr *)options, sizeof(*options)) < 0) {
         fprintf(stderr, "bind failed");
         exit(EXIT_FAILURE);
     }
