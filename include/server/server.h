@@ -1,10 +1,9 @@
 #ifndef SERVER_H
 #define SERVER_H
-#include <sys/_types/_in_addr_t.h>
-#include <sys/_types/_sa_family_t.h>
+#include <netinet/in.h>  // for sockaddr_in, in_addr
 // #include "../keyValue/keyValue.h"
-#include "../sharedData/sharedData.h"
 #include "../parseInput/parseInput.h"
+#include "../sharedData/sharedData.h"
 #define MAX_CON 2
 #define BLOCK_SIZE 4096
 #define HASH_TABLE_SIZE 4096

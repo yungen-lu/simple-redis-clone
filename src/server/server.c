@@ -4,7 +4,6 @@
 #include <stdlib.h>       // for exit, malloc, free, EXIT_FAILURE, realloc
 #include <sys/socket.h>   // for accept, bind, listen, shutdown, socket, AF_...
 #include <unistd.h>       // for close, read
-#include "i386/endian.h"  // for htons, ntohs
 #include "parseInput.h"   // for parseInput
 #include "sharedData.h"   // for createInMemStructs, InMemStructs
 struct sockaddr_in *setServerOptions(sa_family_t ip, in_addr_t addr, unsigned int port) {
