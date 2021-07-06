@@ -11,15 +11,15 @@ int *startServer(struct sockaddr_in *options) {
     int *server_fd = (int *)malloc(sizeof(int));
     *server_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (*server_fd == 0) {
-        perror("socket init failed");
+        // perror("socket init failed");
         exit(EXIT_FAILURE);
     }
     if (bind(*server_fd, (struct sockaddr *)&*options, sizeof(*options)) < 0) {
-        perror("bind failed");
+        // perror("bind failed");
         exit(EXIT_FAILURE);
     }
     if (listen(*server_fd, MAX_CON) < 0) {
-        perror("listen failed");
+        // perror("listen failed");
         exit(EXIT_FAILURE);
     } else {
         printf("server is listening at PORT %d\n", ntohs((*options).sin_port));

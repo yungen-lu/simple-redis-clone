@@ -1,8 +1,5 @@
 #include "parseInput.h"
 
-#include "data.h"
-#include "sds.h"
-
 static void showCmdNotFoundError(char *string) {
     fprintf(stderr, "CMD \"%s\" is not valid\n", string);
     // TODO
@@ -98,7 +95,7 @@ static int renameCmd(char *string, InMemStructs *structs) {
     if (renameKeyInTable(structs->hashTable, structs->hashTableSize, tokens[1], tokens[2])) {
         printf("key: \"%s\" renamed\n", tokens[1]);
     } else
-        perror("error");
+        // perror("error");
     return 0;
 }
 void parseInput(char *string, InMemStructs *structs) {

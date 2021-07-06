@@ -8,7 +8,8 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#include "../data/data.h"
+// #include "../keyValue/keyValue.h"
+#include "../sharedData/sharedData.h"
 #include "../parseInput/parseInput.h"
 #define MAX_CON 2
 #define BLOCK_SIZE 4096

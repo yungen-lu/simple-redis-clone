@@ -1,6 +1,4 @@
-#include "data.h"
-
-#include "sds.h"
+#include "keyValue.h"
 
 hashStruct *createHashTable(const size_t hashTableSize) {
     hashStruct *new = (hashStruct *)malloc(sizeof(hashStruct) * hashTableSize);
@@ -53,7 +51,7 @@ void insertDataToTable(hashStruct *hashTable, const size_t hashTableSize, const 
         }
     }
     // TODO
-    perror("can't find position in table");
+    // perror("can't find position in table");
     exit(EXIT_FAILURE);
 }
 sds findByKeyInTable(hashStruct *hashTable, const size_t hashTableSize, const sds key) {

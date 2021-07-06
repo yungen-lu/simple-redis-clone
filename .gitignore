@@ -3,3 +3,9 @@ build
 cmake_install.cmake
 CMakeCache.txt
 src/.cache
+Makefile
+.cache
+src/compile_commands.json
+src/murmurhash/package.json
+.vscode/launch.json
+iwyu_tool.py
