@@ -1,4 +1,5 @@
 #include "keyValue.h"
+#include "murmurhash.h"
 
 hashStruct *createHashTable(const size_t hashTableSize) {
     hashStruct *new = (hashStruct *)malloc(sizeof(hashStruct) * hashTableSize);

@@ -1,5 +1,12 @@
 #include "server.h"
-
+#include <netinet/in.h>   // for sockaddr_in, in_addr
+#include <stdio.h>        // for printf, size_t
+#include <stdlib.h>       // for exit, malloc, free, EXIT_FAILURE, realloc
+#include <sys/socket.h>   // for accept, bind, listen, shutdown, socket, AF_...
+#include <unistd.h>       // for close, read
+#include "i386/endian.h"  // for htons, ntohs
+#include "parseInput.h"   // for parseInput
+#include "sharedData.h"   // for createInMemStructs, InMemStructs
 struct sockaddr_in *setServerOptions(sa_family_t ip, in_addr_t addr, unsigned int port) {
     struct sockaddr_in *address = (struct sockaddr_in *)malloc(sizeof(struct sockaddr_in));
     address->sin_family = ip;
@@ -11,15 +18,15 @@ int *startServer(struct sockaddr_in *options) {
     int *server_fd = (int *)malloc(sizeof(int));
     *server_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (*server_fd == 0) {
-        // perror("socket init failed");
+        fprintf(stderr, "socket init failed");
         exit(EXIT_FAILURE);
     }
     if (bind(*server_fd, (struct sockaddr *)&*options, sizeof(*options)) < 0) {
-        // perror("bind failed");
+        fprintf(stderr, "bind failed");
         exit(EXIT_FAILURE);
     }
     if (listen(*server_fd, MAX_CON) < 0) {
-        // perror("listen failed");
+        fprintf(stderr, "listen failed");
         exit(EXIT_FAILURE);
     } else {
         printf("server is listening at PORT %d\n", ntohs((*options).sin_port));

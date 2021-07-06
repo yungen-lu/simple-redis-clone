@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#include "../murmurhash/murmurhash.h"
 #define SEED 65
 enum types { null, sdsString, doublell };
 typedef struct {

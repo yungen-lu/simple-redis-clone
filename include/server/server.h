@@ -1,13 +1,7 @@
 #ifndef SERVER_H
 #define SERVER_H
-#include <netinet/in.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <unistd.h>
-
+#include <sys/_types/_in_addr_t.h>
+#include <sys/_types/_sa_family_t.h>
 // #include "../keyValue/keyValue.h"
 #include "../sharedData/sharedData.h"
 #include "../parseInput/parseInput.h"

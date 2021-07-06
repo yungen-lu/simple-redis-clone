@@ -1,8 +1,5 @@
 #ifndef PARSEINPUT_H
 #define PARSEINPUT_H
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include "../keyValue/keyValue.h"
 // #include "../sds/sds.h"
