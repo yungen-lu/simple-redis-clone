@@ -17,7 +17,7 @@ static int getCommand(char *string) {
     char buffer[128];
     sscanf(ptr, "%127s", buffer);
     // sds tmp = sdsnew(buffer);
-    for (size_t i = 0; i < TOTAL_CMD; i++) {
+    for (int i = 0; i < TOTAL_CMD; i++) {
         if (strncmp(buffer, arrOfCmd[i], 127) == 0) {
             return i + 10;
         }
@@ -126,5 +126,7 @@ void parseInput(char *string, InMemStructs *structs) {
         case CMD_NOT_FOUND:
             // DO
             break;
+        default:
+            fprintf(stderr,"switch case default");
     }
 }

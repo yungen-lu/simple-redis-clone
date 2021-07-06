@@ -6,7 +6,7 @@
 #include <unistd.h>       // for close, read
 #include "parseInput.h"   // for parseInput
 #include "sharedData.h"   // for createInMemStructs, InMemStructs
-struct sockaddr_in *setServerOptions(sa_family_t ip, in_addr_t addr, unsigned int port) {
+struct sockaddr_in *setServerOptions(sa_family_t ip, in_addr_t addr, unsigned short port) {
     struct sockaddr_in *address = (struct sockaddr_in *)malloc(sizeof(struct sockaddr_in));
     address->sin_family = ip;
     address->sin_port = htons(port);
@@ -41,7 +41,7 @@ void listinLoop(int *server_fd, struct sockaddr_in *options) {
     int addrlen = sizeof(*options);
     InMemStructs *structs = createInMemStructs(HASH_TABLE_SIZE);
     while ((new_socket = accept(*server_fd, (struct sockaddr *)options, (socklen_t *)&addrlen)) >= 0) {
-        int readSize;
+        ssize_t readSize;
         size_t offset = 0;
         size_t bufferSize = 2 << 20;
         char *buffer = (char *)malloc(sizeof(char) * bufferSize);

@@ -1,4 +1,5 @@
 #include "keyValue.h"
+
 #include "murmurhash.h"
 
 hashStruct *createHashTable(const size_t hashTableSize) {
@@ -24,7 +25,7 @@ InMemStructs *createInMemStructs(const size_t hashTableSize) {
     new->hashTableSize = hashTableSize;
     return new;
 }
-static const int probeFunc(const int i) { return i * i * (i % 2) * -1; }
+static const int probeFunc(const size_t i) { return i * i * (i % 2) * -1; }
 static size_t getTablePos(const size_t hashTableSize, const sds string) {
     return murmurhash(string, (uint32_t)sdslen(string), SEED) % hashTableSize;
 }
@@ -43,7 +44,7 @@ void insertDataToTable(hashStruct *hashTable, const size_t hashTableSize, const 
     const size_t pos = getTablePos(hashTableSize, key);
     for (size_t i = 0; i < hashTableSize; i++) {
         const size_t tmp = pos + probeFunc(i);
-        if ((hashTable[tmp].exist == false || sdscmp(hashTable[tmp].key, key) == 0)) {
+        if (hashTable[tmp].exist == false || sdscmp(hashTable[tmp].key, key) == 0) {
             hashTable[tmp].key = sdsdup(key);
             hashTable[tmp].pointer = sdsdup(value);
             hashTable[tmp].type = sdsString;
