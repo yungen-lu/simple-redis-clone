@@ -1,5 +1,6 @@
 #ifndef SHAREDATA_H
 #define SHAREDATA_H
+
 #include <../sds/sds.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -19,4 +20,5 @@ typedef struct {
 hashStruct *createHashTable(size_t hashTableSize);
 InMemStructs *createInMemStructs(const size_t hashTableSize);
 void deleteHashTable(hashStruct *hashTable, const size_t hashTableSize);
+
 #endif

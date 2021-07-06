@@ -10,20 +10,15 @@ static void showCmdNotFoundError(char *string) {
     // PRINT USAGE
 }
 static int getCommand(char *string) {
-    // char *arrOfCmd[] = {sdsnew("DEL"), sdsnew("DUMP"), sdsnew("EXIST"), sdsnew("RENAME"), sdsnew("SET"),
-    // sdsnew("GET")}; sds ptr = string;
     char *arrOfCmd[] = {"DEL", "DUMP", "EXISTS", "RENAME", "SET", "GET"};
     char *ptr = string;
     char buffer[128];
     sscanf(ptr, "%127s", buffer);
-    // sds tmp = sdsnew(buffer);
     for (int i = 0; i < TOTAL_CMD; i++) {
         if (strncmp(buffer, arrOfCmd[i], 127) == 0) {
             return i + 10;
         }
     }
-    // sdsfree(tmp);
-    // sdsfreesplitres(arrOfCmd, TOTAL_CMD);
     showCmdNotFoundError(buffer);
     return CMD_NOT_FOUND;
 }
@@ -103,7 +98,6 @@ static int renameCmd(char *string, InMemStructs *structs) {
     return 0;
 }
 void parseInput(char *string, InMemStructs *structs) {
-    // sds sdsString = sdsnew(string);
     switch (getCommand(string)) {
         case DEL_CMD:
             delCmd(string, structs);
@@ -127,6 +121,6 @@ void parseInput(char *string, InMemStructs *structs) {
             // DO
             break;
         default:
-            fprintf(stderr,"switch case default");
+            fprintf(stderr, "switch case default");
     }
 }

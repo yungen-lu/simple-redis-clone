@@ -1,11 +1,13 @@
 #include "server.h"
-#include <netinet/in.h>   // for sockaddr_in, in_addr
-#include <stdio.h>        // for printf, size_t
-#include <stdlib.h>       // for exit, malloc, free, EXIT_FAILURE, realloc
-#include <sys/socket.h>   // for accept, bind, listen, shutdown, socket, AF_...
-#include <unistd.h>       // for close, read
-#include "parseInput.h"   // for parseInput
-#include "sharedData.h"   // for createInMemStructs, InMemStructs
+
+#include <netinet/in.h>  // for sockaddr_in, in_addr
+#include <stdio.h>       // for printf, size_t
+#include <stdlib.h>      // for exit, malloc, free, EXIT_FAILURE, realloc
+#include <sys/socket.h>  // for accept, bind, listen, shutdown, socket, AF_...
+#include <unistd.h>      // for close, read
+
+#include "parseInput.h"  // for parseInput
+#include "sharedData.h"  // for createInMemStructs, InMemStructs
 struct sockaddr_in *setServerOptions(sa_family_t ip, in_addr_t addr, unsigned short port) {
     struct sockaddr_in *address = (struct sockaddr_in *)malloc(sizeof(struct sockaddr_in));
     address->sin_family = ip;
@@ -52,9 +54,8 @@ void listinLoop(int *server_fd, struct sockaddr_in *options) {
                 buffer = realloc(buffer, bufferSize);
             }
         }
-        buffer[offset-1] = '\0';
-        // printf("%s\n", buffer);
-        // send(new_socket, "hello", strlen("hello"), 0);
+        buffer[offset - 1] = '\0';
+        // SEND
         parseInput(buffer, structs);
         shutdown(new_socket, SHUT_RDWR);
         close(new_socket);

@@ -37,7 +37,7 @@ static hashStruct *findHashTable(hashStruct *hashTable, const size_t hashTableSi
             return &hashTable[tmp];
         }
     }
-    // perror("hashTable not find");
+    // TODO
     return NULL;
 }
 void insertDataToTable(hashStruct *hashTable, const size_t hashTableSize, const sds key, const sds value) {
@@ -53,36 +53,18 @@ void insertDataToTable(hashStruct *hashTable, const size_t hashTableSize, const 
         }
     }
     // TODO
-    // perror("can't find position in table");
     exit(EXIT_FAILURE);
 }
 sds findByKeyInTable(hashStruct *hashTable, const size_t hashTableSize, const sds key) {
-    // const size_t pos = getTablePos(hashTableSize, key);
-    // for (size_t i = 0; i < hashTableSize; i++) {
-    //     const size_t tmp = (pos + probeFunc(i)) % hashTableSize;
-    //     if (hashTable[tmp].exist == true && (sdscmp(hashTable[tmp].key, key) == 0)) {
-    //         return hashTable[tmp].value;
-    //     }
-    // }
     hashStruct *table = findHashTable(hashTable, hashTableSize, key);
     if (table) {
         return (sds)table->pointer;
     } else {
-        // perror("not find");
+        // TODO
         return NULL;
     }
 }
 bool deleteByKeyInTable(hashStruct *hashTable, const size_t hashTableSize, const sds key) {
-    // const size_t pos = getTablePos(hashTableSize, key);
-    // for (size_t i = 0; i < hashTableSize; i++) {
-    //     const size_t tmp = pos + probeFunc(i);
-    //     if (hashTable[tmp].exist == true && (sdscmp(hashTable[tmp].key, key) == 0)) {
-    //         sdsfree(hashTable[tmp].value);
-    //         sdsfree(hashTable[tmp].key);
-    //         hashTable[tmp].exist = false;
-    //         return true;
-    //     }
-    // }
     hashStruct *table = findHashTable(hashTable, hashTableSize, key);
     if (table) {
         sdsfree((sds)table->pointer);
