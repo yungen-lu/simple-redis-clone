@@ -21,5 +21,6 @@ project(simple-key-value-database VERSION 0.1.0)
 #         ${PROJECT_SOURCE_DIR}/include/server
 # )
 add_subdirectory(src)
+add_subdirectory(test)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED TRUE)
