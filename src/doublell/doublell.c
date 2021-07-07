@@ -1,5 +1,6 @@
 #include "doublell.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "sharedData.h"
@@ -20,11 +21,12 @@ static void deleteListStruct(listStruct *list) {
     deleteDoubleLl(list->head);
     free(list);
 }
-static void insertDoubleLl(doubleLl **head, doubleLl **tail, sds value) {
+static void insertDoubleLlRight(doubleLl **head, doubleLl **tail, sds value) {
+    {}
     doubleLl *new = (doubleLl *)malloc(sizeof(doubleLl));
     new->tail = NULL;
     new->value = sdsdup(value);
-    if (*head == NULL) {
+    if (*head == NULL && *tail == NULL) {
         new->head = NULL;
         *head = new;
         *tail = new;
@@ -33,33 +35,93 @@ static void insertDoubleLl(doubleLl **head, doubleLl **tail, sds value) {
     new->head = *tail;
     *tail = new;
 }
-static listStruct *insertToListStruct(listStruct *list, sds value) {
+static void insertDoubleLlLeft(doubleLl **head, doubleLl **tail, sds value) {
+    doubleLl *new = (doubleLl *)malloc(sizeof(doubleLl));
+    new->head = NULL;
+    new->value = sdsdup(value);
+    if (*head == NULL && *tail == NULL) {
+        new->tail = NULL;
+        *head = new;
+        *tail = new;
+        return;
+    }
+    new->tail = *head;
+    *head = new;
+}
+
+static sds popDoubleLlLeft(doubleLl **oldHead) {
+    if (*oldHead == NULL) {
+        fprintf(stderr, "doubell is null");
+        return NULL;
+    }
+    doubleLl *newHead = (*oldHead)->tail;
+    sds returnValue = (*oldHead)->value;
+    free(*oldHead);
+    if (newHead) {
+        newHead->head = NULL;
+    }
+    *oldHead = newHead;
+    return returnValue;
+}
+static sds popDoubleLlRight(doubleLl **oldTail) {
+    if (*oldTail == NULL) {
+        fprintf(stderr, "doubell is null");
+        return NULL;
+    }
+    doubleLl *newTail = (*oldTail)->head;
+    sds returnValue = (*oldTail)->value;
+    free(*oldTail);
+    if (newTail) {
+        newTail->tail = NULL;
+    }
+    *oldTail = newTail;
+    return returnValue;
+}
+
+static sds popStruct(listStruct *list, enum leftright type) {
+    if (list == NULL) {
+        fprintf(stderr, "list is null");
+        return NULL;
+    }
+    if (type == left) {
+        return popDoubleLlLeft(&(list->head));
+    } else {
+        return popDoubleLlRight(&(list->tail));
+    }
+}
+static listStruct *insertToListStruct(listStruct *list, sds value, enum leftright type) {
     if (list == NULL) {
         listStruct *new = (listStruct *)malloc(sizeof(listStruct));
         new->head = NULL;
         new->tail = NULL;
         new->len = 0;
-        insertDoubleLl(&(new->head), &(new->tail), value);
+        insertDoubleLlLeft(&(new->head), &(new->tail), value);
         return new;
     }
-    insertDoubleLl(&(list->head), &(list->tail), value);
+    if (type == left) {
+        insertDoubleLlLeft(&(list->head), &(list->tail), value);
+    } else {
+        insertDoubleLlRight(&(list->head), &(list->tail), value);
+    }
     list->len += 1;
     return list;
 }
-void insertListToTable(hashStruct *hashTable, const size_t hashTableSize, const sds key, const sds value) {
+bool insertListToTable(hashStruct *hashTable, const size_t hashTableSize, const sds key, const sds value,
+                       enum leftright type) {
     const size_t pos = getTablePos(hashTableSize, key);
     for (size_t i = 0; i < hashTableSize; i++) {
         const size_t tmp = pos + probeFunc(i);
         if (hashTable[tmp].exist == false || sdscmp(hashTable[tmp].key, key) == 0) {
             hashTable[tmp].key = sdsdup(key);
-            insertToListStruct((listStruct *)hashTable[tmp].pointer, value);
+            hashTable[tmp].pointer = insertToListStruct((listStruct *)hashTable[tmp].pointer, value, type);
             hashTable[tmp].type = doublell;
             hashTable[tmp].exist = true;
-            return;
+            return true;
         }
     }
     // TODO
-    exit(EXIT_FAILURE);
+    // exit(EXIT_FAILURE);
+    return false;
 }
 bool deleteListByKeyInTable(hashStruct *hashTable, const size_t hashTableSize, const sds key) {
     hashStruct *table = findHashTable(hashTable, hashTableSize, key);
@@ -77,13 +139,22 @@ bool renameListKeyInTable(hashStruct *hashTable, const size_t hashTableSize, con
     sds tmpValue;
     if (table) {
         tmpValue = sdsdup((sds)table->pointer);
-        deleteListStruct((listStruct *)table->pointer);
+        // deleteListStruct((listStruct *)table->pointer);
         sdsfree(table->key);
         table->exist = false;
-        insertListToTable(hashTable, hashTableSize, newkey, tmpValue);
+        // insertListToLeftTable(hashTable, hashTableSize, newkey, tmpValue);
         sdsfree(tmpValue);
         return true;
 
     } else
         return false;
+}
+sds popListByKeyInTable(hashStruct *hashTable, const size_t hashTableSize, const sds key, enum leftright type) {
+    hashStruct *table = findHashTable(hashTable, hashTableSize, key);
+    if (table) {
+        return popStruct((listStruct *)table->pointer, type);
+    } else
+        // TODO
+        fprintf(stderr, "error cant find table");
+    return NULL;
 }

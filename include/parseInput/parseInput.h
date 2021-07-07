@@ -1,7 +1,7 @@
 #ifndef PARSEINPUT_H
 #define PARSEINPUT_H
 
-#include "../keyValue/keyValue.h"
+#include "../sharedData/sharedData.h"
 #define DEL_CMD 10
 #define DUMP_CMD 11
 #define EXISTS_CMD 12
@@ -10,13 +10,13 @@
 #define GET_CMD 15
 #define LPUSH_CMD 16
 #define LPOP_CMD 17
-#define LINDEX 18
-#define LLEN 19
-#define RPUSH 20
-#define RPOP 21
+#define LINDEX_CMD 18
+#define LLEN_CMD 19
+#define RPUSH_CMD 20
+#define RPOP_CMD 21
 #define LREM
 
-#define TOTAL_CMD 6
+#define TOTAL_CMD 12
 #define CMD_NOT_FOUND -1
 void parseInput(char *string, InMemStructs *structs);
 #endif

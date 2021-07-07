@@ -28,10 +28,8 @@ bool deleteStringByKeyInTable(hashStruct *hashTable, const size_t hashTableSize,
 }
 bool renameStringKeyInTable(hashStruct *hashTable, const size_t hashTableSize, const sds oldkey, const sds newkey) {
     hashStruct *table = findHashTable(hashTable, hashTableSize, oldkey);
-    sds tmpValue;
     if (table) {
-        tmpValue = sdsdup((sds)table->pointer);
-        sdsfree((sds)table->pointer);
+        sds tmpValue = (sds)table->pointer;
         sdsfree(table->key);
         table->exist = false;
         insertStringDataToTable(hashTable, hashTableSize, newkey, tmpValue);

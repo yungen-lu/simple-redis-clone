@@ -4,13 +4,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "doublell.h"
+#include "keyValue.h"
 static void showCmdNotFoundError(char *string) {
     fprintf(stderr, "CMD \"%s\" is not valid\n", string);
     // TODO
     // PRINT USAGE
 }
 static int getCommand(const char *string) {
-    char *arrOfCmd[] = {"DEL", "DUMP", "EXISTS", "RENAME", "SET", "GET"};
+    char *arrOfCmd[] = {"DEL",   "DUMP", "EXISTS", "RENAME", "SET",   "GET",
+                        "LPUSH", "LPOP", "LINDEX", "LLEN",   "RPUSH", "RPOP"};
     char buffer[128];
     sscanf(string, "%127s", buffer);
     for (int i = 0; i < TOTAL_CMD; i++) {
@@ -96,6 +99,35 @@ static int renameCmd(const char *string, InMemStructs *structs) {
         fprintf(stderr, "can't rename key");
     return 0;
 }
+static int popListCmd(const char *string, InMemStructs *structs, enum leftright type) {
+    int count;
+    sds value;
+    sds *tokens = tokenizeString(string, &count);
+    if (count != 2) {
+        fprintf(stderr, "count error:%d\n", count);
+        sdsfreesplitres(tokens, count);
+        return -1;
+    }
+    if ((value = popListByKeyInTable(structs->hashTable, structs->hashTableSize, tokens[1], type))) {
+        printf("%s\n", value);
+    } else
+        fprintf(stderr, "pop failed\n");
+    return 0;
+}
+
+static int pushListCmd(const char *string, InMemStructs *structs, enum leftright type) {
+    int count;
+    sds *tokens = tokenizeString(string, &count);
+    if (count != 3) {
+        fprintf(stderr, "count error:%d\n", count);
+        sdsfreesplitres(tokens, count);
+        return -1;
+    }
+    if (insertListToTable(structs->hashTable, structs->hashTableSize, tokens[1], tokens[2], type)) {
+    } else
+        fprintf(stderr, "can't push key");
+    return 0;
+}
 void parseInput(char *string, InMemStructs *structs) {
     switch (getCommand(string)) {
         case DEL_CMD:
@@ -115,6 +147,24 @@ void parseInput(char *string, InMemStructs *structs) {
             break;
         case GET_CMD:
             getCmd(string, structs);
+            break;
+        case LPUSH_CMD:
+            pushListCmd(string, structs, left);
+            break;
+        case LPOP_CMD:
+            popListCmd(string, structs, left);
+            break;
+        case LINDEX_CMD:
+            //
+            break;
+        case LLEN_CMD:
+            //
+            break;
+        case RPUSH_CMD:
+            pushListCmd(string, structs, right);
+            break;
+        case RPOP_CMD:
+            popListCmd(string, structs, right);
             break;
         case CMD_NOT_FOUND:
             // DO

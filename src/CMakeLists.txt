@@ -24,7 +24,7 @@ add_executable(simple-key-value-database-binary main.c)
 target_link_libraries(sharedData-lib PRIVATE sds-lib  PRIVATE murmurhash-lib)
 target_link_libraries(keyValue-lib PRIVATE sharedData-lib)
 target_link_libraries(server-lib PRIVATE parseInput-lib PRIVATE sharedData-lib)
-target_link_libraries(parseInput-lib PRIVATE keyValue-lib)
+target_link_libraries(parseInput-lib PRIVATE keyValue-lib PRIVATE doublell-lib)
 target_link_libraries(doublell-lib PRIVATE sharedData-lib)
 target_link_libraries(simple-key-value-database-binary PRIVATE server-lib)
 

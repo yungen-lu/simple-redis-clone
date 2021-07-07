@@ -1,5 +1,7 @@
 #ifndef DOUBLELL_H
 #define DOUBLELL_H
+#include <stddef.h>
+
 #include "../sharedData/sharedData.h"
 typedef struct doubleLl {
     sds value;
@@ -12,8 +14,10 @@ typedef struct {
     doubleLl *tail;
     size_t len;
 } listStruct;
-
-void insertListToTable(hashStruct *hashTable, const size_t hashTableSize, const sds key, const sds value);
+enum leftright { left, right };
+bool insertListToTable(hashStruct *hashTable, const size_t hashTableSize, const sds key, const sds value,
+                       enum leftright type);
 bool deleteListByKeyInTable(hashStruct *hashTable, const size_t hashTableSize, const sds key);
 bool renameListKeyInTable(hashStruct *hashTable, const size_t hashTableSize, const sds oldkey, const sds newkey);
+sds popListByKeyInTable(hashStruct *hashTable, const size_t hashTableSize, const sds key, enum leftright type);
 #endif
