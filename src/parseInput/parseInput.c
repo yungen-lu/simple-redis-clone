@@ -11,17 +11,19 @@ static void showCmdNotFoundError(char *string) {
     // TODO
     // PRINT USAGE
 }
-static int getCommand(const char *string) {
+int getCommand(const char *string) {
     char *arrOfCmd[] = {"DEL",   "DUMP", "EXISTS", "RENAME", "SET",   "GET",
                         "LPUSH", "LPOP", "LINDEX", "LLEN",   "RPUSH", "RPOP"};
     char buffer[128];
     sscanf(string, "%127s", buffer);
-    for (int i = 0; i < TOTAL_CMD; i++) {
-        if (strncmp(buffer, arrOfCmd[i], 127) == 0) {
-            return i + 10;
+    if (*buffer) {
+        for (int i = 0; i < TOTAL_CMD; i++) {
+            if (strncmp(buffer, arrOfCmd[i], 127) == 0) {
+                return i + 10;
+            }
         }
+        showCmdNotFoundError(buffer);
     }
-    showCmdNotFoundError(buffer);
     return CMD_NOT_FOUND;
 }
 static int setCmd(const char *string, InMemStructs *structs) {
@@ -131,7 +133,7 @@ static int pushListCmd(const char *string, InMemStructs *structs, enum leftright
     sdsfreesplitres(tokens, count);
     return 0;
 }
-void parseInput(char *string, InMemStructs *structs) {
+void parseInput(const char *string, InMemStructs *structs) {
     switch (getCommand(string)) {
         case DEL_CMD:
             delCmd(string, structs);

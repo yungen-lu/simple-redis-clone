@@ -18,5 +18,7 @@
 
 #define TOTAL_CMD 12
 #define CMD_NOT_FOUND -1
-void parseInput(char *string, InMemStructs *structs);
+void parseInput(const char *string, InMemStructs *structs);
+int getCommand(const char *string);
+
 #endif
