@@ -22,7 +22,6 @@ static void deleteListStruct(listStruct *list) {
     free(list);
 }
 static void insertDoubleLlRight(doubleLl **head, doubleLl **tail, sds value) {
-    {}
     doubleLl *new = (doubleLl *)malloc(sizeof(doubleLl));
     new->tail = NULL;
     new->value = sdsdup(value);
@@ -138,12 +137,15 @@ bool renameListKeyInTable(hashStruct *hashTable, const size_t hashTableSize, con
     hashStruct *table = findHashTable(hashTable, hashTableSize, oldkey);
     sds tmpValue;
     if (table) {
-        tmpValue = sdsdup((sds)table->pointer);
-        // deleteListStruct((listStruct *)table->pointer);
+        listStruct *tmp = (listStruct *)table->pointer;
         sdsfree(table->key);
+        table->type = null;
         table->exist = false;
-        // insertListToLeftTable(hashTable, hashTableSize, newkey, tmpValue);
-        sdsfree(tmpValue);
+        hashStruct *newTable = findHashTable(hashTable, hashTableSize, newkey);
+        newTable->exist = true;
+        newTable->type = doublell;
+        newTable->key = sdsdup(newkey);
+        newTable->pointer = tmp;
         return true;
 
     } else
