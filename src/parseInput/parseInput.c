@@ -24,17 +24,9 @@ static int getCommand(const char *string) {
     showCmdNotFoundError(buffer);
     return CMD_NOT_FOUND;
 }
-static sds *tokenizeString(const char *string, int *count) {
-    sds *tokens;
-    const char *del = " \n\t";
-    sds tmp = sdsnew(string);
-    tokens = sdssplitlen(tmp, sdslen(tmp), del, 1, count);
-    sdsfree(tmp);
-    return tokens;
-}
 static int setCmd(const char *string, InMemStructs *structs) {
     int count;
-    sds *tokens = tokenizeString(string, &count);
+    sds *tokens = sdssplitargs(string, &count);
     if (count != 3) {
         fprintf(stderr, "count error:%d\n", count);
         sdsfreesplitres(tokens, count);
@@ -46,7 +38,7 @@ static int setCmd(const char *string, InMemStructs *structs) {
 }
 static int getCmd(const char *string, InMemStructs *structs) {
     int count;
-    sds *tokens = tokenizeString(string, &count);
+    sds *tokens = sdssplitargs(string, &count);
     if (count != 2) {
         fprintf(stderr, "count error:%d\n", count);
         sdsfreesplitres(tokens, count);
@@ -54,11 +46,12 @@ static int getCmd(const char *string, InMemStructs *structs) {
     }
     sds value = findByKeyInTable(structs->hashTable, structs->hashTableSize, tokens[1]);
     if (value) printf("value is :%s\n", value);
+    sdsfreesplitres(tokens, count);
     return 0;
 }
 static int delCmd(const char *string, InMemStructs *structs) {
     int count;
-    sds *tokens = tokenizeString(string, &count);
+    sds *tokens = sdssplitargs(string, &count);
     if (count != 2) {
         fprintf(stderr, "count error:%d\n", count);
         sdsfreesplitres(tokens, count);
@@ -69,11 +62,13 @@ static int delCmd(const char *string, InMemStructs *structs) {
     } else {
         printf("key not found\n");
     }
+
+    sdsfreesplitres(tokens, count);
     return 0;
 }
 static int existsCmd(const char *string, InMemStructs *structs) {
     int count;
-    sds *tokens = tokenizeString(string, &count);
+    sds *tokens = sdssplitargs(string, &count);
     if (count != 2) {
         fprintf(stderr, "count error:%d\n", count);
         sdsfreesplitres(tokens, count);
@@ -83,11 +78,13 @@ static int existsCmd(const char *string, InMemStructs *structs) {
         printf("true\n");
     } else
         printf("false\n");
+
+    sdsfreesplitres(tokens, count);
     return 0;
 }
 static int renameCmd(const char *string, InMemStructs *structs) {
     int count;
-    sds *tokens = tokenizeString(string, &count);
+    sds *tokens = sdssplitargs(string, &count);
     if (count != 3) {
         fprintf(stderr, "count error:%d\n", count);
         sdsfreesplitres(tokens, count);
@@ -97,12 +94,14 @@ static int renameCmd(const char *string, InMemStructs *structs) {
         printf("key: \"%s\" renamed\n", tokens[1]);
     } else
         fprintf(stderr, "can't rename key");
+
+    sdsfreesplitres(tokens, count);
     return 0;
 }
 static int popListCmd(const char *string, InMemStructs *structs, enum leftright type) {
     int count;
     sds value;
-    sds *tokens = tokenizeString(string, &count);
+    sds *tokens = sdssplitargs(string, &count);
     if (count != 2) {
         fprintf(stderr, "count error:%d\n", count);
         sdsfreesplitres(tokens, count);
@@ -112,12 +111,14 @@ static int popListCmd(const char *string, InMemStructs *structs, enum leftright 
         printf("%s\n", value);
     } else
         fprintf(stderr, "pop failed\n");
+
+    sdsfreesplitres(tokens, count);
     return 0;
 }
 
 static int pushListCmd(const char *string, InMemStructs *structs, enum leftright type) {
     int count;
-    sds *tokens = tokenizeString(string, &count);
+    sds *tokens = sdssplitargs(string, &count);
     if (count != 3) {
         fprintf(stderr, "count error:%d\n", count);
         sdsfreesplitres(tokens, count);
@@ -126,6 +127,8 @@ static int pushListCmd(const char *string, InMemStructs *structs, enum leftright
     if (insertListToTable(structs->hashTable, structs->hashTableSize, tokens[1], tokens[2], type)) {
     } else
         fprintf(stderr, "can't push key");
+
+    sdsfreesplitres(tokens, count);
     return 0;
 }
 void parseInput(char *string, InMemStructs *structs) {
