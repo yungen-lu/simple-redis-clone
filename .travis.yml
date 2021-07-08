@@ -14,11 +14,19 @@ addons:
     packages:
     - clang-tools-12
     - clang-12
-    - cmake
 env:
   - CC=clang-12
 
+before_install:
+  - mkdir $HOME/usr
+  - export PATH="$HOME/usr/bin:$PATH"
+  - wget https://cmake.org/files/v3.20/cmake-3.20.5-linux-x86_64.sh
+  - chmod +x cmake-3.20.5-linux-x86_64.sh
+  - ./cmake-3.20.5-linux-x86_64.sh --prefix=$HOME/usr --exclude-subdir --skip-license
 script:
+  - echo ${CC}
+  - echo ${CXX}
+  - cmake --version
   - mkdir build
   - cd build
   - cmake -DCODE_COVERAGE=ON ..
