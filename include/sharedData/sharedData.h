@@ -18,8 +18,10 @@ typedef struct {
     hashStruct *hashTable;
     size_t hashTableSize;
 } InMemStructs;
-void pushMessageToWarningBuffer(const char *message);
-char *getWarningBuffer();
+void createWarningBuffer();
+void pushMessageToWarningBuffer(sds message);
+sds getWarningBuffer();
+void deleteWarningBuffer();
 hashStruct *createHashTable(size_t hashTableSize);
 InMemStructs *createInMemStructs(const size_t hashTableSize);
 void deleteHashTable(hashStruct *hashTable, const size_t hashTableSize);

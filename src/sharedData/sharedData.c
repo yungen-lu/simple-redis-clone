@@ -4,9 +4,13 @@
 
 #include "murmurhash.h"
 #include "sds.h"
-static char WarningBuffer[1024] = {'\0'};
-void pushMessageToWarningBuffer(const char *message) { strcat(WarningBuffer, message); }
-char *getWarningBuffer() { return WarningBuffer; }
+
+static sds WarningBuffer;
+void createWarningBuffer() { WarningBuffer = sdsempty(); }
+void pushMessageToWarningBuffer(sds message) { WarningBuffer = sdscatsds(WarningBuffer, message); }
+sds getWarningBuffer() { return WarningBuffer; }
+void deleteWarningBuffer() { sdsfree(WarningBuffer); }
+
 hashStruct *createHashTable(const size_t hashTableSize) {
     hashStruct *new = (hashStruct *)malloc(sizeof(hashStruct) * hashTableSize);
     for (size_t i = 0; i < hashTableSize; i++) {

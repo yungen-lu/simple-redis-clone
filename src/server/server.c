@@ -23,6 +23,11 @@ int *startServer(struct sockaddr_in *options) {
         fprintf(stderr, "socket init failed");
         exit(EXIT_FAILURE);
     }
+    int opt = 1;
+    if (setsockopt(*server_fd, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(opt))) {
+        perror("setsockopt");
+        exit(EXIT_FAILURE);
+    }
     if (bind(*server_fd, (struct sockaddr *)options, sizeof(*options)) < 0) {
         fprintf(stderr, "bind failed");
         exit(EXIT_FAILURE);
@@ -53,6 +58,7 @@ void listinLoop(const int *server_fd, struct sockaddr_in *options) {
         if (readSize > 0) {
             buffer[readSize] = '\0';
         }
+        createWarningBuffer();
         parseInput(buffer, structs);
         ssize_t sentBytes;
         char *globalWarningBuffer = getWarningBuffer();
@@ -64,6 +70,7 @@ void listinLoop(const int *server_fd, struct sockaddr_in *options) {
         if (sentBytes == -1) {
             fprintf(stderr, "send error");
         }
+        deleteWarningBuffer();
         shutdown(new_socket, SHUT_RDWR);
         close(new_socket);
         free(buffer);
