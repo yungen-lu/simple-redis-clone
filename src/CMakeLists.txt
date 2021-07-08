@@ -19,6 +19,8 @@ target_include_directories(sharedData-lib PUBLIC ${PROJECT_SOURCE_DIR}/include/s
 target_include_directories(doublell-lib PUBLIC ${PROJECT_SOURCE_DIR}/include/doublell)
 
 add_executable(simple-key-value-database-binary main.c)
+add_executable(simple-key-value-database-client client.c)
+
 # target_link_libraries(server-lib PRIVATE murmurhash-lib)
 # target_link_libraries(simple-key-value-database-binary PRIVATE server-lib PRIVATE data-lib PRIVATE murmurhash-lib PRIVATE sds-lib PRIVATE parseInput-lib)
 target_link_libraries(sharedData-lib PRIVATE sds-lib  PRIVATE murmurhash-lib)
