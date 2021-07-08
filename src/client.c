@@ -18,7 +18,6 @@ int main(int argc, char const *argv[]) {
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_port = htons(PORT);
 
-    // Convert IPv4 and IPv6 addresses from text to binary form
     if (inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr) <= 0) {
         printf("\nInvalid address/ Address not supported \n");
         return -1;
@@ -31,18 +30,13 @@ int main(int argc, char const *argv[]) {
                 fprintf(stderr, "send error\n");
             }
             valread = read(sock, buffer, 1024);
-            if (read < 0) {
+            if (valread < 0) {
                 fprintf(stderr, "read error\n");
             }
             printf("%s\n", buffer);
         }
-        break;
     }
     shutdown(sock, SHUT_RDWR);
     close(sock);
-    // if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
-    //     printf("\nConnection Failed \n");
-    //     return -1;
-    // }
     return 0;
 }

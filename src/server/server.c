@@ -50,27 +50,25 @@ void listinLoop(const int *server_fd, struct sockaddr_in *options) {
     InMemStructs *structs = createInMemStructs(HASH_TABLE_SIZE);
     while ((new_socket = accept(*server_fd, (struct sockaddr *)options, (socklen_t *)&addrlen)) >= 0) {
         ssize_t readSize;
-        size_t offset = 0;
         size_t bufferSize = 2 << 20;
         char *buffer = (char *)malloc(sizeof(char) * bufferSize);
         // SEND
-        readSize = read(new_socket, buffer, BLOCK_SIZE);
-        if (readSize > 0) {
+        while ((readSize = read(new_socket, buffer, BLOCK_SIZE)) > 0) {
             buffer[readSize] = '\0';
+            createWarningBuffer();
+            parseInput(buffer, structs);
+            ssize_t sentBytes;
+            const sds globalWarningBuffer = getWarningBuffer();
+            if (*globalWarningBuffer) {
+                sentBytes = send(new_socket, globalWarningBuffer, sdslen(globalWarningBuffer), 0);
+            } else {
+                sentBytes = send(new_socket, "OK", strlen("OK"), 0);
+            }
+            if (sentBytes == -1) {
+                fprintf(stderr, "send error");
+            }
+            deleteWarningBuffer();
         }
-        createWarningBuffer();
-        parseInput(buffer, structs);
-        ssize_t sentBytes;
-        char *globalWarningBuffer = getWarningBuffer();
-        if (*globalWarningBuffer) {
-            sentBytes = send(new_socket, globalWarningBuffer, strlen(globalWarningBuffer), 0);
-        } else {
-            sentBytes = send(new_socket, "OK", strlen("OK"), 0);
-        }
-        if (sentBytes == -1) {
-            fprintf(stderr, "send error");
-        }
-        deleteWarningBuffer();
         shutdown(new_socket, SHUT_RDWR);
         close(new_socket);
         free(buffer);
