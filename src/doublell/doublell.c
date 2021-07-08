@@ -135,7 +135,6 @@ bool deleteListByKeyInTable(hashStruct *hashTable, const size_t hashTableSize, c
 }
 bool renameListKeyInTable(hashStruct *hashTable, const size_t hashTableSize, const sds oldkey, const sds newkey) {
     hashStruct *table = findHashTable(hashTable, hashTableSize, oldkey);
-    sds tmpValue;
     if (table) {
         listStruct *tmp = (listStruct *)table->pointer;
         sdsfree(table->key);

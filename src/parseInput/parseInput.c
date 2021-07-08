@@ -50,7 +50,9 @@ static int getCmd(const char *string, InMemStructs *structs) {
         return -1;
     }
     sds value = findByKeyInTable(structs->hashTable, structs->hashTableSize, tokens[1]);
-    if (value) pushMessageToWarningBuffer(value);
+    if (value) {
+        pushMessageToWarningBuffer(value);
+    }
     sdsfreesplitres(tokens, count);
     return 0;
 }

@@ -50,7 +50,7 @@ hashStruct *findHashTable(hashStruct *hashTable, const size_t hashTableSize, con
         const size_t tmp = (pos + probeFunc(i)) % hashTableSize;
         if (hashTable[tmp].exist == false) {
             return &hashTable[tmp];
-        } else if ((sdscmp(hashTable[tmp].key, key) == 0)) {
+        } else if (sdscmp(hashTable[tmp].key, key) == 0) {
             return &hashTable[tmp];
         }
     }
