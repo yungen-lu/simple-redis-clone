@@ -3,6 +3,7 @@
 #include <netinet/in.h>  // for sockaddr_in, in_addr
 #include <stdio.h>       // for printf, size_t
 #include <stdlib.h>      // for exit, malloc, free, EXIT_FAILURE, realloc
+#include <string.h>
 #include <sys/socket.h>  // for accept, bind, listen, shutdown, socket, AF_...
 #include <unistd.h>      // for close, read
 
@@ -47,18 +48,22 @@ void listinLoop(const int *server_fd, struct sockaddr_in *options) {
         size_t offset = 0;
         size_t bufferSize = 2 << 20;
         char *buffer = (char *)malloc(sizeof(char) * bufferSize);
-        while ((readSize = read(new_socket, buffer + offset, BLOCK_SIZE)) > 0) {
-            offset += readSize;
-            if (offset >= bufferSize) {
-                bufferSize += 2 << 20;
-                buffer = realloc(buffer, bufferSize);
-            }
-        }
-        if (offset != 0) {
-            buffer[offset - 1] = '\0';
-        }
         // SEND
+        readSize = read(new_socket, buffer, BLOCK_SIZE);
+        if (readSize > 0) {
+            buffer[readSize] = '\0';
+        }
         parseInput(buffer, structs);
+        ssize_t sentBytes;
+        char *globalWarningBuffer = getWarningBuffer();
+        if (*globalWarningBuffer) {
+            sentBytes = send(new_socket, globalWarningBuffer, strlen(globalWarningBuffer), 0);
+        } else {
+            sentBytes = send(new_socket, "OK", strlen("OK"), 0);
+        }
+        if (sentBytes == -1) {
+            fprintf(stderr, "send error");
+        }
         shutdown(new_socket, SHUT_RDWR);
         close(new_socket);
         free(buffer);

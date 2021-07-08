@@ -1,9 +1,10 @@
 #ifndef SHAREDATA_H
 #define SHAREDATA_H
 
-#include "../sds/sds.h"
 #include <stdbool.h>
 #include <stdlib.h>
+
+#include "../sds/sds.h"
 
 #define SEED 65
 enum types { null, sdsString, doublell };
@@ -17,12 +18,14 @@ typedef struct {
     hashStruct *hashTable;
     size_t hashTableSize;
 } InMemStructs;
+void pushMessageToWarningBuffer(const char *message);
+char *getWarningBuffer();
 hashStruct *createHashTable(size_t hashTableSize);
 InMemStructs *createInMemStructs(const size_t hashTableSize);
 void deleteHashTable(hashStruct *hashTable, const size_t hashTableSize);
 bool checkExsistsByKeyInTable(hashStruct *hashTable, const size_t hashTableSize, const sds key);
 
-void * findByKeyInTable(hashStruct *hashTable, const size_t hashTableSize, const sds key);
+void *findByKeyInTable(hashStruct *hashTable, const size_t hashTableSize, const sds key);
 const long probeFunc(const long i);
 size_t getTablePos(const size_t hashTableSize, const sds string);
 hashStruct *findHashTable(hashStruct *hashTable, const size_t hashTableSize, const sds key);
