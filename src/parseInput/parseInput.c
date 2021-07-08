@@ -24,6 +24,9 @@ int getCommand(const char *string) {
         }
         showCmdNotFoundError(buffer);
     }
+    sds tmp = sdsnew("command not found");
+    pushMessageToWarningBuffer(tmp);
+    sdsfree(tmp);
     return CMD_NOT_FOUND;
 }
 static int setCmd(const char *string, InMemStructs *structs) {
@@ -47,7 +50,7 @@ static int getCmd(const char *string, InMemStructs *structs) {
         return -1;
     }
     sds value = findByKeyInTable(structs->hashTable, structs->hashTableSize, tokens[1]);
-    if (value) printf("value is :%s\n", value);
+    if (value) pushMessageToWarningBuffer(value);
     sdsfreesplitres(tokens, count);
     return 0;
 }
@@ -63,6 +66,9 @@ static int delCmd(const char *string, InMemStructs *structs) {
         printf("delete \"%s\" success\n", tokens[1]);
     } else {
         printf("key not found\n");
+        sds tmp = sdsnew("key not found");
+        pushMessageToWarningBuffer(tmp);
+        sdsfree(tmp);
     }
 
     sdsfreesplitres(tokens, count);
@@ -94,8 +100,11 @@ static int renameCmd(const char *string, InMemStructs *structs) {
     }
     if (renameStringKeyInTable(structs->hashTable, structs->hashTableSize, tokens[1], tokens[2])) {
         printf("key: \"%s\" renamed\n", tokens[1]);
-    } else
-        fprintf(stderr, "can't rename key");
+    } else {
+        sds tmp = sdsnew("can't rename key");
+        pushMessageToWarningBuffer(tmp);
+        sdsfree(tmp);
+    }
 
     sdsfreesplitres(tokens, count);
     return 0;
@@ -111,8 +120,12 @@ static int popListCmd(const char *string, InMemStructs *structs, enum leftright 
     }
     if ((value = popListByKeyInTable(structs->hashTable, structs->hashTableSize, tokens[1], type))) {
         printf("%s\n", value);
-    } else
+    } else {
+        sds tmp = sdsnew("pop failed");
+        pushMessageToWarningBuffer(tmp);
+        sdsfree(tmp);
         fprintf(stderr, "pop failed\n");
+    }
 
     sdsfreesplitres(tokens, count);
     return 0;
@@ -127,8 +140,12 @@ static int pushListCmd(const char *string, InMemStructs *structs, enum leftright
         return -1;
     }
     if (insertListToTable(structs->hashTable, structs->hashTableSize, tokens[1], tokens[2], type)) {
-    } else
+    } else {
+        sds tmp = sdsnew("can't push key");
+        pushMessageToWarningBuffer(tmp);
+        sdsfree(tmp);
         fprintf(stderr, "can't push key");
+    }
 
     sdsfreesplitres(tokens, count);
     return 0;
