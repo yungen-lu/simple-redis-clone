@@ -1,7 +1,7 @@
 #ifndef SHAREDATA_H
 #define SHAREDATA_H
 
-#include <../sds/sds.h>
+#include "../sds/sds.h"
 #include <stdbool.h>
 #include <stdlib.h>
 

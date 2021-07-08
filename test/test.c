@@ -1,6 +1,5 @@
 #include "parseInput.h"
 #include "unity.h"
-#include "unity_internals.h"
 void setUp(void) {}
 
 void tearDown(void) {
@@ -9,7 +8,7 @@ void tearDown(void) {
 void test_CmdParse(void) {
     char *arrOfCmd[] = {"DEL",   "DUMP", "EXISTS", "RENAME", "SET",   "GET",
                         "LPUSH", "LPOP", "LINDEX", "LLEN",   "RPUSH", "RPOP"};
-    char *arrOfWrongCmd[] = {"qwe", "asd", "EOIW", "askd", "WS"," ","\n","\t"};
+    char *arrOfWrongCmd[] = {"qwe", "asd", "EOIW", "askd", "WS", " ", "\n", "\t", "\n\t"};
     size_t sizeOfarrOfCmd = sizeof(arrOfCmd) / sizeof(arrOfCmd[0]);
     size_t sizeOfarrOfWrongCmd = sizeof(arrOfWrongCmd) / sizeof(arrOfWrongCmd[0]);
     // TEST_ASSERT_EQUAL_INT(DEL_CMD,getCommand("DEL"));
