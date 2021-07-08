@@ -1,10 +1,7 @@
 #include "parseInput.h"
 #include "unity.h"
-void setUp(void) {}
-
-void tearDown(void) {
-    // clean stuff up here
-}
+void setUp(void) { createWarningBuffer(); }
+void tearDown(void) { deleteWarningBuffer(); }
 void test_CmdParse(void) {
     char *arrOfCmd[] = {"DEL",   "DUMP", "EXISTS", "RENAME", "SET",   "GET",
                         "LPUSH", "LPOP", "LINDEX", "LLEN",   "RPUSH", "RPOP"};
