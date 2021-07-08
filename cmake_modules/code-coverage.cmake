@@ -369,6 +369,16 @@ function(target_code_coverage TARGET_NAME)
             -output-dir=${CMAKE_COVERAGE_OUTPUT_DIRECTORY}/${target_code_coverage_COVERAGE_TARGET_NAME}
             -format="html" ${EXCLUDE_REGEX}
           DEPENDS ccov-processing-${target_code_coverage_COVERAGE_TARGET_NAME})
+        # Generates TXT output of the coverage information for perusal
+        add_custom_target(
+          ccov-txt-${target_code_coverage_COVERAGE_TARGET_NAME}
+          COMMAND
+            ${LLVM_COV_PATH} show $<TARGET_FILE:${TARGET_NAME}> ${SO_OBJECTS}
+            -instr-profile=${target_code_coverage_COVERAGE_TARGET_NAME}.profdata
+            -show-line-counts-or-regions
+            -format="text" ${EXCLUDE_REGEX} >
+            ${CMAKE_COVERAGE_OUTPUT_DIRECTORY}/coverage.txt
+          DEPENDS ccov-processing-${target_code_coverage_COVERAGE_TARGET_NAME})
 
       elseif(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES
                                                   "GNU")
