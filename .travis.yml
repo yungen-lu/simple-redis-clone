@@ -1,20 +1,12 @@
 dist: bionic
 language: c
+compiler: clang
 addons:
   sonarcloud:
     organization: "yungen-lu"
     token:
       secure: "eog5qj1qp97Usy4TmrIjpqHnwD84PWHE88lhpG1MKh8tliOYjBBTZgmXJW/RwoBFbsSeTx5AsN78O4BlCe8UxPgv3Im5z6i3MN0ERFQ5PZyzOiB3cDlU0Y6qi5IRpgjvNqmaIMIW2L4pDHyynuhrIZ/vlKpXLavQpkSmMiGqFzoZ8WQMsiOXt0A7oB1qnuiTE4nk6Zw/nsnDOgkYvkf8UdbNe5gGTM8VAIZVV7OV6I5nqrSzNAOk3P4P1bUEvUbbu3a1P469TnXn6p4F8JvmwLW8pGUguTwK2HiTv8D75Kf5O6PaiT8lHvKnXo97YNG/z+sRwBDuJcAetB5/U1BiNtX07+Am5yK9Qr91ohq4bmCFlk7tHxkggqw+vKCpGDezOvXPSaoC4/tlVViwQRgbgf8d82OmoxXKFtamHV42lW3eV7yB/OPZqfH/kj8GBIpQ2/Jo/mLoUeuP+QmG7BE34Gtx/eBYsNogmqUkdCiRJxBG/Pz2UTrwSnVyrsqPFFcBNAxw7v72HdqDOR0CauVx8B/6RjhLIac5Lucfv7lbPmBKs0UrnLgOLeyUCZAgT2Oiov9GCNWXM2uoy0l0rY5sq5K20gqY3qk6PTSR3vP/JXvfMaI3px03mDs+TE6iRtmF5VS/dxYZGFjibuVNH0iz9bjYw5QqeAid8DagFFxwrFE=" # encrypted value of your token
-  apt:
-    sources:
-    - sourceline: "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-12 main"
-      key_url: "https://apt.llvm.org/llvm-snapshot.gpg.key"
-    packages:
-    - clang-tools-12
-    - clang-12
-    - llvm-12
 env:
-  - CC=clang-12
 
 before_install:
   - mkdir $HOME/usr
@@ -23,7 +15,6 @@ before_install:
   - chmod +x cmake-3.20.5-linux-x86_64.sh
   - ./cmake-3.20.5-linux-x86_64.sh --prefix=$HOME/usr --exclude-subdir --skip-license
 script:
-  - export CXX=clang++-12
   - echo ${CC}
   - echo ${CXX}
   - clang --version
