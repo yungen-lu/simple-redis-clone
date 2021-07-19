@@ -86,8 +86,15 @@ static int existsCmd(const char *string, InMemStructs *structs) {
     }
     if (checkExsistsByKeyInTable(structs->hashTable, structs->hashTableSize, tokens[1])) {
         printf("true\n");
-    } else
+        sds tmp = sdsnew("true");
+        pushMessageToWarningBuffer(tmp);
+        sdsfree(tmp);
+    } else {
         printf("false\n");
+        sds tmp = sdsnew("false");
+        pushMessageToWarningBuffer(tmp);
+        sdsfree(tmp);
+    }
 
     sdsfreesplitres(tokens, count);
     return 0;
@@ -122,6 +129,10 @@ static int popListCmd(const char *string, InMemStructs *structs, enum leftright 
     }
     if ((value = popListByKeyInTable(structs->hashTable, structs->hashTableSize, tokens[1], type))) {
         printf("%s\n", value);
+        sds tmp = sdsnew(value);
+        pushMessageToWarningBuffer(tmp);
+        sdsfree(tmp);
+
     } else {
         sds tmp = sdsnew("pop failed");
         pushMessageToWarningBuffer(tmp);

@@ -33,6 +33,7 @@ int main(int argc, char const *argv[]) {
             if (valread < 0) {
                 fprintf(stderr, "read error\n");
             }
+            buffer[valread] = '\0';
             printf("%s\n", buffer);
         }
     }

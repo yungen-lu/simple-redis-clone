@@ -9,6 +9,7 @@ static sds WarningBuffer;
 void createWarningBuffer() { WarningBuffer = sdsempty(); }
 void pushMessageToWarningBuffer(sds message) { WarningBuffer = sdscatsds(WarningBuffer, message); }
 sds getWarningBuffer() { return WarningBuffer; }
+void resetWarningBuffer() { *WarningBuffer = '\0'; }
 void deleteWarningBuffer() { sdsfree(WarningBuffer); }
 
 hashStruct *createHashTable(const size_t hashTableSize) {
