@@ -28,9 +28,12 @@ void test_GetCmd(void) {
     char *arrOfAns[] = {"value7", "value8", "value6", "value4", "value5", "value3", "value2", "value1"};
     for (size_t i = 0; i < sizeOfarrOfCmd; i++) {
         parseInput(arrOfCmd[i], structs);
-        TEST_ASSERT_EQUAL_STRING("",getWarningBuffer());
+        TEST_ASSERT_EQUAL_STRING("", getWarningBuffer());
+    }
+    for (size_t i = 0; i < sizeOfarrOfCmd; i++) {
         parseInput(arrOfGetCmd[i], structs);
         TEST_ASSERT_EQUAL_STRING(arrOfAns[i], getWarningBuffer());
+        resetWarningBuffer();
     }
 }
 int main(void) {

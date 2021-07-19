@@ -21,6 +21,7 @@ typedef struct {
 void createWarningBuffer();
 void pushMessageToWarningBuffer(sds message);
 sds getWarningBuffer();
+void resetWarningBuffer();
 void deleteWarningBuffer();
 hashStruct *createHashTable(size_t hashTableSize);
 InMemStructs *createInMemStructs(const size_t hashTableSize);
