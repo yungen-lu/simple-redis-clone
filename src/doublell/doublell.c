@@ -32,6 +32,7 @@ static void insertDoubleLlRight(doubleLl **head, doubleLl **tail, sds value) {
         return;
     }
     new->head = *tail;
+    (*tail)->tail = new;
     *tail = new;
 }
 static void insertDoubleLlLeft(doubleLl **head, doubleLl **tail, sds value) {
@@ -45,6 +46,7 @@ static void insertDoubleLlLeft(doubleLl **head, doubleLl **tail, sds value) {
         return;
     }
     new->tail = *head;
+    (*head)->head = new;
     *head = new;
 }
 
@@ -58,8 +60,9 @@ static sds popDoubleLlLeft(doubleLl **oldHead) {
     free(*oldHead);
     if (newHead) {
         newHead->head = NULL;
-    }
-    *oldHead = newHead;
+        *oldHead = newHead;
+    } else
+        *oldHead = NULL;
     return returnValue;
 }
 static sds popDoubleLlRight(doubleLl **oldTail) {
@@ -72,8 +75,9 @@ static sds popDoubleLlRight(doubleLl **oldTail) {
     free(*oldTail);
     if (newTail) {
         newTail->tail = NULL;
-    }
-    *oldTail = newTail;
+        *oldTail = newTail;
+    } else
+        *oldTail = NULL;
     return returnValue;
 }
 
@@ -94,7 +98,7 @@ static listStruct *insertToListStruct(listStruct *list, sds value, enum leftrigh
         new->head = NULL;
         new->tail = NULL;
         new->len = 0;
-        insertDoubleLlLeft(&(new->head), &(new->tail), value);
+        insertDoubleLlRight(&(new->head), &(new->tail), value);
         return new;
     }
     if (type == left) {
@@ -107,19 +111,17 @@ static listStruct *insertToListStruct(listStruct *list, sds value, enum leftrigh
 }
 bool insertListToTable(hashStruct *hashTable, const size_t hashTableSize, const sds key, const sds value,
                        enum leftright type) {
-    const size_t pos = getTablePos(hashTableSize, key);
-    for (size_t i = 0; i < hashTableSize; i++) {
-        const size_t tmp = pos + probeFunc(i);
-        if (hashTable[tmp].exist == false || sdscmp(hashTable[tmp].key, key) == 0) {
-            hashTable[tmp].key = sdsdup(key);
-            hashTable[tmp].pointer = insertToListStruct((listStruct *)hashTable[tmp].pointer, value, type);
-            hashTable[tmp].type = doublell;
-            hashTable[tmp].exist = true;
-            return true;
-        }
+    hashStruct *table = findHashTable(hashTable, hashTableSize, key);
+    if (table) {
+        // FREE if EXISTS
+        table->key = sdsdup(key);
+        table->pointer = insertToListStruct((listStruct *)table->pointer, value, type);
+        table->type = doublell;
+        table->exist = true;
+        return true;
     }
     // TODO
-    // exit(EXIT_FAILURE);
+    exit(EXIT_FAILURE);
     return false;
 }
 bool deleteListByKeyInTable(hashStruct *hashTable, const size_t hashTableSize, const sds key) {
